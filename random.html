@@ -30,10 +30,7 @@
     <section class="section">
       <div class="container">
         <h1 class="title">Simpsons Quotes</h1>
-        <p>
-          Reload for another quote or get a random quote :
-          <a href="random.html">Random quote</a>
-        </p>
+        <p>Get a random quote</p>
 
         <div class="content" id="simpsons-quotes"></div>
       </div>
@@ -49,23 +46,21 @@
       function fetchSimpsonsQuotes() {
         let nbrQuotes = parseInt(prompt('Nombre de citations :'));
         if (!isNaN(nbrQuotes)) {
-          const url = `https://simpsons-quotes-api.herokuapp.com/quotes?count=${nbrQuotes}`;
+          let idQuote = Math.floor(Math.random() * nbrQuotes) + 1;
+          const url = `https://simpsons-quotes-api.herokuapp.com/quotes?id=${idQuote}`;
           axios
             .get(url)
             .then(function (response) {
               return response.data; // response.data instead of response.json() with fetch
             })
-            .then(function (quotes) {
-              console.log('data decoded from JSON:', quotes);
+            .then(function (quoteOneSimpson) {
+              console.log('data decoded from JSON:', quoteOneSimpson);
+              let quoteSimpson = quoteOneSimpson[0];
 
               // Build a block of HTML
-              quotes.forEach((el) => {
-                let quotesHtml = `<p><strong>${el.character}</strong></p> 
-                <p>${el.quote}</p><img src="${el.image}" alt="${el.character}"/>`;
-                document.querySelector(
-                  '#simpsons-quotes'
-                ).innerHTML += quotesHtml;
-              });
+              let quoteHtml = `<p><strong>${quoteSimpson.character}</strong></p>
+                <p>${quoteSimpson.quote}</p><img src="${quoteSimpson.image}" alt="${quoteSimpson.character}"/>`;
+              document.querySelector('#simpsons-quotes').innerHTML = quoteHtml;
             });
         }
       }
